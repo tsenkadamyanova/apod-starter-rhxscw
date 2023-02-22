@@ -1,0 +1,18 @@
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.25rem;
+}
+
+.playground {
+  border-top: 1px solid gray;
+  padding: 0.5rem;
+  flex: 1 1 auto;
+}
+apod {
+  display: inline-block;
+  /* border: 1px solid teal; */
+  padding: 0.5rem;
+  margin: 0.5rem;
+}

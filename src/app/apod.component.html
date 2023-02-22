@@ -1,0 +1,26 @@
+<ng-container *ngIf="apodData$ | async as data">
+  <div class="box-today">
+    <div><img src="{{ data.url }}" /></div>
+    <div>
+      <strong> {{ data.title }}</strong>
+    </div>
+    <small>{{ data.date }}</small>
+    <!-- <div>{{ data.explanation }}</div> -->
+  </div>
+</ng-container>
+
+<ng-container *ngIf="apodGetSix$ | async as dataAll">
+  <div class="preview-all">
+    <div class="box" *ngFor="let item of dataAll; let i = index">
+      <div><img src="{{ item.url }}" /></div>
+      <div>
+        <strong> {{ item.title }}</strong>
+      </div>
+      <small>{{ item.date }}</small>
+    </div>
+  </div>
+  <div class="preview-nav">
+    <a>← previeous</a>
+    <a>next →</a>
+  </div>
+</ng-container>
