@@ -9,7 +9,23 @@ export interface APOD {
   readonly explanation: string;
   readonly title: string;
 }
-export interface APODParams {
+
+enum MediaType {
+  image = 'image',
+  video = 'video',
+}
+
+interface APODAPIData {
+  readonly date: string;
+  readonly explanation: string;
+  readonly hdurl: string;
+  readonly media_type: 'image' | 'video';
+  readonly service_version: string;
+  readonly title: string;
+  readonly url: string;
+  readonly thumbnail_url: string;
+}
+interface APODParams {
   readonly date?: string;
   readonly start_date?: string;
   readonly end_date?: string;
@@ -22,8 +38,8 @@ export interface APODParams {
 export class APODService {
   constructor(private http: HttpClient) {}
 
-  getAPOD(count: number = 0): Observable<APOD> {
-    let date = this.formatDate(this.getDaysBack(new Date(), count));
+  getAPOD(index: number = 0): Observable<APOD> {
+    const date = this.formatDate(this.getDaysBack(new Date(), index));
     const url = 'https://api.nasa.gov/planetary/apod';
 
     return this.http
@@ -32,12 +48,12 @@ export class APODService {
       })
       .pipe(map(this.convertToAPODData));
   }
-
+  // TODO : finish get images by date and navigate
   getAll(count: number = 0): Observable<APOD[]> {
     const url = 'https://api.nasa.gov/planetary/apod';
 
     return this.http
-      .get<APOD[]>(url, {
+      .get<APODAPIData[]>(url, {
         params: { ...this.getParams, count },
       })
       .pipe(
@@ -47,12 +63,12 @@ export class APODService {
       );
   }
 
-  private convertToAPODData(data: APOD): APOD {
+  private convertToAPODData(data: APODAPIData): APOD {
     return {
-      date: data['date'],
-      title: data['title'],
-      url: data['media_type'] === 'video' ? data['thumbnail_url'] : data['url'],
-      explanation: data['explanation'],
+      date: new Date(data.date),
+      title: data.title,
+      url: data.media_type === MediaType.video ? data.thumbnail_url : data.url,
+      explanation: data.explanation,
     };
   }
   private get getParams(): APODParams {
